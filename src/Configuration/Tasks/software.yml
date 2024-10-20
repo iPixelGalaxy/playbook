@@ -20,7 +20,7 @@ actions:
     runas: currentUserElevated
     wait: true
     option: "browser-arc"
-`   # Brave Browser
+   # Brave Browser
   - !writeStatus: {status: 'Installing Brave', option: "browser-brave"}
   - !cmd:
     # command: 'winget install Brave.Brave --source winget --scope machine --silent --accept-source-agreements --accept-package-agreements'
