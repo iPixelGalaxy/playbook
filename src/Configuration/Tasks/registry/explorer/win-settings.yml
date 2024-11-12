@@ -18,12 +18,10 @@ actions:
 
   # ======> Display -> Graphics settings
 
-  # === Hardware-accelerated GPU scheduling - On
+  # === Hardware-accelerated GPU scheduling - Off (I find it actually makes performance worse, so I'm turning it off out of the box as it's generally enabled by default)
   # ------> Requires build 20H1+
   # ------> https://www.tenforums.com/tutorials/150440-turn-off-hardware-accelerated-gpu-scheduling-windows-10-a.html
-  # ------> One of our users had Hardware Acceleration issues, therefore discarded
-  # [HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\GraphicsDrivers]
-  # "HwSchMode"=dword:00000002
+  - !registryValue: {path: 'HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\GraphicsDrivers', value: 'HwSchMode', type: REG_DWORD, data: '1'}
 
   # ======> Notifications & actions
 
