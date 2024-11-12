@@ -2,14 +2,7 @@
 title: Configure Explorer
 description: Configure general settings for Explorer
 privilege: TrustedInstaller
-actions:
-
-  # === perf: Disables Automatic Folder Type Discovery
-  # ------> Disabling it fixes the 'folder always loading' issue when a folder contains a lot of media files.  
-  # ------> https://www.windowslatest.com/2024/03/04/windows-11-can-open-big-folders-in-file-explorer-faster-if-you-turn-off-folder-discovery/
-  - !registryValue: {path: 'HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell', value: 'FolderType', type: REG_SZ, data: 'NotSpecified'} 
-  - !registryValue: {path: 'HKU\.DEFAULT\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell', value: 'FolderType', type: REG_SZ, data: 'NotSpecified'}
-  
+actions:  
 
   # === perf: Force explorer to use high performance GPU
   - !registryValue: { path: 'HKCU\Software\Microsoft\DirectX\UserGpuPreferences', value: 'C:\Windows\explorer.exe', type: REG_SZ, data: 'GpuPreference=2;' }
@@ -18,33 +11,6 @@ actions:
 
   # === perf: Disable 'Include account-based insights, recent, favorite and recommended' for OneDrive in File Explorer
   - !registryValue: { path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'DisableGraphRecentItems', type: REG_DWORD, data: '1' }
-
-  # === perf: Disable 'Group By' in the Downloads folder to avoid unnecessary dates comparison
-  - !powerShell: 
-    runas: trustedInstaller
-    command: |
-      $folderTypesKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderTypes'
-      $downloadsFolderID = '{885a186e-a440-4ada-812b-db871b942259}'
-
-      $path = Join-Path -Path $folderTypesKey -ChildPath $downloadsFolderID
-      Get-ChildItem -Path $path -Recurse | ForEach-Object {
-        if ((Get-ItemProperty -Path $_.PSPath).GroupBy) {
-            Set-ItemProperty -Path $_.PSPath -Name GroupBy -Value ''
-          }
-      }
-    
-  # Necesarry to refresh 'Bags'
-  - !powerShell: 
-    runas: currentUserElevated
-    command: |
-      $downloadsFolderID = '{885a186e-a440-4ada-812b-db871b942259}'
-      $bagsPath = 'HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags'
-      Get-ChildItem -Path $bagsPath | ForEach-Object {
-        $fullPath = Join-Path -Path $_.PSPath -ChildPath 'Shell\{885A186E-A440-4ADA-812B-DB871B942259}'
-        if (Test-Path -Path $fullPath) {
-          Remove-Item -Path $fullPath -Recurse
-        } 
-      }
 
   # === Disable the new Spotlight icon on Desktop (24H2)
   - !registryValue: { path: 'HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel', value: '{2cc5ca98-6485-489a-920e-b3e88a6ccce3}', type: REG_DWORD, data: '1' }
