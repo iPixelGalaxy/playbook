@@ -13,9 +13,9 @@ actions:
     exeDir: true
     command: '.\UPDATE-APPX.ps1'
     
-    # Arc Browser
+  # Arc Browser
     
-    - !writeStatus: {status: 'Installing Arc Browser on reboot', option: "browser-arc"}
+  - !writeStatus: {status: 'Installing Arc Browser on reboot', option: "browser-arc"}
   - !registryValue: 
     path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
     value: 'Install Arc'
