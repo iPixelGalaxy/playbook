@@ -1,8 +1,13 @@
-name: Archive and Pre-Release (Arc)
+name: Archive and Release (Arc)
 
 on:
   # Allow manual triggering
   workflow_dispatch:
+    inputs:
+      custom_version:
+        description: 'Custom version (optional, overrides automatic date versioning)'
+        required: false
+        default: ''
 
 env:
   FILENAME: 'Revi-PB-${{ github.event.workflow_run.started_at }}.apbx'
@@ -20,9 +25,13 @@ jobs:
       - name: Set version
         id: set_version
         run: |
-          # Get current date in "YY.MM" format
-          CURRENT_DATE=$(date +%y.%m.%d)
-          echo "VERSION=${CURRENT_DATE}" >> $GITHUB_ENV
+          if [[ "${{ github.event.inputs.custom_version }}" != "" ]]; then
+            VERSION="${{ github.event.inputs.custom_version }}"
+          else
+            # Get current date in "YY.MM.DD" format
+            VERSION=$(date +%y.%m.%d)
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
         shell: bash
 
       - name: Update version
@@ -49,11 +58,11 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Uses GitHub token for authentication
-          file: "Revi-PB-24.12.apbx"
-          asset_name: "Revi-PB-24.12.apbx"
-          tag: 24.12
+          file: "Revi-PB-${{ env.VERSION }}.apbx"
+          asset_name: "Revi-PB-${{ env.VERSION }}.apbx"
+          tag: ${{ env.VERSION }}
           overwrite: true
-          release_name: 24.12
+          release_name: ${{ env.VERSION }}
           prerelease: true # Set to true for pre-release
           body: |
             # Pre-release Download ✨
