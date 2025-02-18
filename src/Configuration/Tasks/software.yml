@@ -20,31 +20,24 @@ actions:
     path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
     value: 'Install Arc'
     type: REG_SZ
-    data: 'cmd /c title ArcBrowser && winget install TheBrowserCompany.Arc --silent --accept-source-agreements --accept-package-agreements'
+    data: 'cmd /c title Arc Browser && winget install TheBrowserCompany.Arc --silent --accept-source-agreements --accept-package-agreements'
     option: "browser-arc"
 
-  - !writeStatus: {status: 'Installing Brave on reboot', option: "browser-brave"}
+  # Zen Browser
+  - !writeStatus: {status: 'Installing Zen Browser on reboot', option: "browser-zen"}
   - !registryValue: 
     path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
     value: 'Install Brave'
     type: REG_SZ
-    data: 'cmd /c title BraveBrowser && winget install XP8C9QZMS2PC1T --source msstore --silent --accept-source-agreements --accept-package-agreements'
-    option: "browser-brave"
+    data: 'cmd /c title Zen Browser && winget install Zen-Team.Zen-Browser --silent --accept-source-agreements --accept-package-agreements'
+    option: "browser-zen"
 
-  - !writeStatus: {status: 'Configuring Brave', option: "browser-brave"}
-  - !cmd:
-    exeDir: true
-    command: 'robocopy "BraveSoftware" "%ProgramFiles%\BraveSoftware" /E /IM /IT /NP & robocopy "BraveSoftware" "%localappdata%\BraveSoftware" /E /IM /IT /NP'
-    ignoreErrors: true
-    weight: 20
-    option: "browser-brave"
-
-  # Firefox
-  - !writeStatus: {status: 'Installing Firefox on reboot', option: "browser-firefox"}
+  # Google Chrome
+  - !writeStatus: {status: 'Installing Google Chrome on reboot', option: "browser-chrome"}
   - !registryValue: 
     path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
     value: 'Install Firefox'
     type: REG_SZ
-    data: 'cmd /c title Firefox && winget install Mozilla.Firefox --source winget --override "/S /MaintenanceService=false" --accept-source-agreements --accept-package-agreements'
-    option: "browser-firefox"
+    data: 'cmd /c title Google Chrome && winget install Google.Chrome --silent --accept-source-agreements --accept-package-agreements'
+    option: "browser-chrome"
 
